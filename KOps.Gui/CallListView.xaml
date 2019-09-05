@@ -1,0 +1,102 @@
+﻿<UserControl
+    x:Class="KOps.Gui.CallListView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:KOps.Gui"
+    d:DataContext="{d:DesignInstance Type=local:CallsListViewModel, IsDesignTimeCreatable=True}"
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter
+            x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+    <Grid>
+        <ListBox
+            ItemsSource="{Binding Calls}"
+            HorizontalContentAlignment="Stretch">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid
+                        Background="{Binding Highlight}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel
+                            Grid.Column="0"
+                            Orientation="Vertical"
+                            Grid.IsSharedSizeScope="True">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition
+                                        Width="Auto"
+                                        SharedSizeGroup="Label" />
+                                    <ColumnDefinition
+                                        Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Label
+                                    HorizontalAlignment="Right"
+                                    Grid.Column="0">Group:</Label>
+                                <TextBlock
+                                    Grid.Column="1"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding GroupId}"></TextBlock>
+                            </Grid>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition
+                                        Width="Auto"
+                                        SharedSizeGroup="Label" />
+                                    <ColumnDefinition
+                                        Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Label
+                                    HorizontalAlignment="Right"
+                                    Grid.Column="0">Status:</Label>
+                                <TextBlock
+                                    Grid.Column="1"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding CallStatus}"></TextBlock>
+                            </Grid>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition
+                                        Width="Auto"
+                                        SharedSizeGroup="Label" />
+                                    <ColumnDefinition
+                                        Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Label
+                                    HorizontalAlignment="Right"
+                                    Grid.Column="0">Talker:</Label>
+                                <TextBlock
+                                    Grid.Column="1"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding Talker}"></TextBlock>
+                            </Grid>
+                        </StackPanel>
+                        <TextBlock
+                            Grid.Column="1"
+                            FontSize="28"
+                            Margin="0 0 20 0"
+                            VerticalAlignment="Center"
+                            Visibility="{Binding Transmitting, Converter={StaticResource BooleanToVisibilityConverter}}"
+                            Text="🎙" />
+                        <TextBlock
+                            Grid.Column="1"
+                            FontSize="28"
+                            Margin="0 0 20 0"
+                            VerticalAlignment="Center"
+                            Visibility="{Binding Receiving, Converter={StaticResource BooleanToVisibilityConverter}}"
+                            Text="🔊" />
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</UserControl>

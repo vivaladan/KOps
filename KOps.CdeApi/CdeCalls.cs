@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace KOps.CdeApi
 {
-    public class CdeCallsApi : ICdeCallsApi
+    public class CdeCalls
     {
         private readonly ILogger<CdeApi> logger;
         private readonly ICde cde;
@@ -19,7 +19,7 @@ namespace KOps.CdeApi
 
         static readonly object _object = new object();
 
-        public CdeCallsApi(ILogger<CdeApi> logger, ICde cde, IMediator mediator)
+        public CdeCalls(ILogger<CdeApi> logger, ICde cde, IMediator mediator)
         {
             this.logger = logger;
             this.cde = cde;
@@ -49,7 +49,7 @@ namespace KOps.CdeApi
             Publish(events);
         }
 
-        public async Task AcquireFloor()
+        internal async Task AcquireFloor()
         {
             foreach (var call in calls.Connected)
             {
@@ -57,7 +57,7 @@ namespace KOps.CdeApi
             }
         }
 
-        public async Task ReleaseFloor()
+        internal async Task ReleaseFloor()
         {
             foreach (var call in calls.Connected)
             {

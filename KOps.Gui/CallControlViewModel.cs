@@ -22,12 +22,12 @@ namespace KOps.Gui
 
         private async void OnPush(object obj)
         {
-            await cdeApi.Calls.AcquireFloor();
+            await cdeApi.AcquireFloor();
         }
 
         private async void OnRelease(object obj)
         {
-            await cdeApi.Calls.ReleaseFloor();
+            await cdeApi.ReleaseFloor();
         }
     }
 }

@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace KOps.Application
 {
     public interface ICdeApi
     {
-        ICdeCallsApi Calls { get; }
+        Task AcquireFloor();
 
-        System.Threading.Tasks.Task LoginAsync(string id);
+        Task LoginAsync(string id);
+
+        Task MakeGroupCallAsync(string groupId);
+
+        Task ReleaseFloor();
     }
 }

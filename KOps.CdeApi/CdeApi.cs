@@ -13,21 +13,39 @@ namespace KOps.CdeApi
     {
         private readonly string localDirectory;
         private readonly ILogger logger;
+        private readonly CdeCalls calls;
+        private readonly CdeAudio audio;
         private readonly ICde cde;
 
         public CdeApi(ILogger<CdeApi> logger, IMediator mediator)
         {
+            this.logger = logger;
+            
             localDirectory = Path.GetDirectoryName(
                 Assembly.GetExecutingAssembly().Location);
 
             cde = new Cde(localDirectory);
 
-            this.logger = logger;
-
-            Calls = new CdeCallsApi(logger, cde, mediator);
+            calls = new CdeCalls(logger, cde, mediator);
+            audio = new CdeAudio(logger, cde, mediator);
         }
 
-        public ICdeCallsApi Calls { get; }
+        public async Task MakeGroupCallAsync(string groupId)
+        {
+            await calls.MakeGroupCallAsync(groupId);
+        }
+
+        public async Task AcquireFloor()
+        {            
+            await calls.AcquireFloor();
+            audio.StartCapture();
+        }
+
+        public async Task ReleaseFloor()
+        {
+            await calls.ReleaseFloor();
+            audio.StopCapture();
+        }
 
         public async Task LoginAsync(string id)
         {
@@ -76,6 +94,9 @@ namespace KOps.CdeApi
             {
                 // initialization error
             }
+
+            cde.SetAudioPlaybackInterval(10u);
+            cde.SetAudioCaptureInterval(20u);
 
             try
             {

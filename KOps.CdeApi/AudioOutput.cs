@@ -10,8 +10,8 @@ namespace KOps.CdeApi
 
         public AudioOutput()
         {
-            var waveFormat = new WaveFormat(48000, 16, 2);
-            waveStream = new BufferedWaveProvider(waveFormat);
+            //var waveFormat = new WaveFormat(48000, 16, 2);
+            waveStream = new BufferedWaveProvider(new WaveFormat());
             
             outputDevice = new WaveOutEvent();
             outputDevice.Init(waveStream);

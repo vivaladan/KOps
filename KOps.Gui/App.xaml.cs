@@ -39,7 +39,7 @@ namespace KOps.Gui
                 }
                 catch (Exception ex)
                 {
-                    AppendTitle(" (Error)");
+                    AppendTitle($" (Error - {ex.Message})");
                 }
             });
         }

@@ -37,6 +37,7 @@ namespace KOps.Gui
 
             services.AddScoped<ICdeApi, CdeApi.CdeApi>();
 
+            services.AddSingleton<GroupsListViewModel>();
             services.AddSingleton<CallsListViewModel>();
             services.AddSingleton<CallControlViewModel>();
             services.AddScoped<MainViewModel>();

@@ -16,4 +16,10 @@
     <ProjectReference Include="..\KOps.Application\KOps.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="kn_up_custom_kodiak.xml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

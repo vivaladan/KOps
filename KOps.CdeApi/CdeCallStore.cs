@@ -19,9 +19,7 @@ namespace KOps.CdeApi
 
         public CdeCall Get(uint callId)
         {
-            calls.TryGetValue(callId, out var call);
-
-            if (call == null)
+            if (!calls.TryGetValue(callId, out var call))
             {
                 call = new CdeCall();
                 calls.Add(callId, call);

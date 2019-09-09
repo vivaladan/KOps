@@ -41,14 +41,14 @@ namespace KOps.CdeApi
 
         private void AudioInput_DataAvailable(object sender, byte[] e)
         {
-            logger.LogInformation("Sending samples as {@Bytes}", e.Length);
+            //logger.LogDebug("Sending samples as {@Bytes}", e.Length);
 
             cde.CaptureAudioFrame(e);
         }
 
         private void Cde_AudioPlaybackFrameAvailable(object sender, AudioPlaybackEventArgs e)
         {
-            logger.LogInformation("Received samples for channel {@ChannelId} as {@Bytes}", e.ChannelId, e.Data.Length);
+            //logger.LogDebug("Received samples as {@Bytes} for channel {@ChannelId}", e.ChannelId, e.Data.Length);
 
             if (!channels.TryGetValue(e.ChannelId, out var channel))
             {

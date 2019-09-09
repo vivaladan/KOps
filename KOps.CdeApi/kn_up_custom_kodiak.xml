@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?> 
+<pocdefaults id="1">
+<!-- Number of KA packets --> 
+   <incall-ka-num>1</incall-ka-num>
+<!-- Size of KA each packet --> 
+   <incall-ka-size>4</incall-ka-size>
+<!-- Interval in milli seconds between two successive KA bursts --> 
+   <incall-ka-intrvl>200</incall-ka-intrvl>
+<!-- Number of Predictive Wakeup packets --> 
+   <pw-num>1</pw-num>
+<!-- Size of random data going in each Predictive Wakeup packet --> 
+   <pw-size>200</pw-size>
+<!-- precall Number of KA packets --> 
+   <precall-ka-num>1</precall-ka-num>
+<!-- precall Size of KA each packet --> 
+   <precall-ka-size>4</precall-ka-size>
+<!-- precall Interval in milli seconds between two successive KA bursts --> 
+   <precall-ka-intrvl>200</precall-ka-intrvl>
+<!-- precall KA activity duration --> 
+   <precall-ka-duration>20</precall-ka-duration>
+<!-- Status of DTX (0 for OFF, 1 for ON)-->
+   <media-dtx-status>0</media-dtx-status>
+<!-- Reduce Call setup time feature ON/OFF (1 for ON, 0 for OFF)-->
+   <reduce-call-setup-time>0</reduce-call-setup-time>
+<!-- Packet drop count -->
+   <packet-drop-count>0</packet-drop-count>
+<!-- Number of 20ms frames to be dropped at the receiver -->
+   <rx-20ms-frm-drop-count>0</rx-20ms-frm-drop-count>
+ <!-- Echo Canceller Control; 1 is on, 0 is off -->
+   <ec-status>0</ec-status>
+<!-- Network Predictive Wakeup interval value in seconds -->
+   <nwk-pw-interval>0</nwk-pw-interval>
+<!-- Disable Geo (even if server send geo params; 1-disable, 0-enable) -->
+   <geo-disable>1</geo-disable>
+<!-- AMR-NB Mode of operation -->
+   <amrnb-mode>7</amrnb-mode>
+<!-- Multiple frame per packet -->
+   <num-frm-per-pkt>7</num-frm-per-pkt>
+<!-- Activation key enabling NULL means no mdn or enter valid mdn-->
+   <activation-key>NULL</activation-key>
+<!--Floor recovery timer value in seconds -->
+	<floor-recovery-timer>180</floor-recovery-timer>
+<!--Floor Throttle timer value in seconds -->
+	<tbcp-floor-throttle-val>3</tbcp-floor-throttle-val>
+<!-- Jitter Buffer Logs status -->
+    <jitter-logs-status>1</jitter-logs-status>
+<!--Presence Robustness Disable  -->
+	<presence-robustness-disable>0</presence-robustness-disable>
+<!--KA burst interval  -->	
+	<media-nat-burst-intrvl>5</media-nat-burst-intrvl>
+<!-- Autolog publish  2 to enable crash-log and logrollover  1 to enable only crash log 0 to disable all -->
+	<auto-log-publish-state>2</auto-log-publish-state>
+<!-- MOS Score Testing Metrico  1-enable, 0-disable -->
+	<mos-score-testing>0</mos-score-testing>
+<!--kopc-port -->
+	<kopc-port>12345</kopc-port>
+<!--client-port-->
+	<client-port>23456</client-port>
+<!--client-http-port -->
+	<client-http-port>34567</client-http-port>
+<!--tone-tx-20ms-drp-cnt-->
+	<tone-tx-20ms-drp-cnt>25</tone-tx-20ms-drp-cnt>
+<!-- Jitter Buffer Logs status -->
+    <jitter-logs-path>/data/data/com.att.eptt/files/</jitter-logs-path>
+<!-- setup configurations -->
+    <auto_log_publish_email_id>kodnatqc@gmail.com</auto_log_publish_email_id>
+	<auto_log_publish_email_passwd>kodiak123</auto_log_publish_email_passwd>     
+<!-- pager mode 0-disabled 1-enabled --> 
+	<pager-mode-support>1</pager-mode-support>
+<!--Configurable 3G Upload size -->
+				<3g-upload-size>1</3g-upload-size>
+<!--Deployment Based Auth Key -->
+	<lcms-auth-key>6daa50</lcms-auth-key>
+	<!-- on-carrier-supported-mcc-mnc-list --> 
+    <mcc-mnc-list>311-180,310-410,310-150,310-170,310-380,310-560,310-680,310-070,310-090</mcc-mnc-list>
+<!-- on-carrier-supported-SID-NID list for CDMA--> 
+    <sid-nid-list>1412-65589,1412-65535 </sid-nid-list >
+<!-- Timer to run LCMS check periodically. If '0' 24hrs default value will be taken -->
+<lcms-schedule-timer>0</lcms-schedule-timer>
+<!-- im_rec-wait-timer: Wait Timer introduced as part of Immediate Reconnect Requirement -->
+<im_rec-wait-timer>0</im_rec-wait-timer>
+<codec-priority>OPUS</codec-priority>
+<tls-handshake-timer>5</tls-handshake-timer>
+</pocdefaults>

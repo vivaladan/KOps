@@ -16,7 +16,7 @@ namespace KOps.CdeApi
     {
         private readonly string localDirectory;
         private readonly ILogger logger;
-        private readonly CdeCalls calls;
+        private readonly ICdeCalls calls;
         private readonly CdeAudio audio;
         private readonly CdeGroups groups;
         private readonly ICde cde;
@@ -30,7 +30,7 @@ namespace KOps.CdeApi
 
             cde = new Cde(localDirectory);
 
-            calls = new CdeCalls(logger, cde, mediator);
+            calls = new CdeCallsThreadSafe(logger, cde, mediator);
             audio = new CdeAudio(logger, cde, mediator);
             groups = new CdeGroups(logger, cde, mediator);
 
@@ -64,6 +64,15 @@ namespace KOps.CdeApi
         private void Affiliations_AffiliationStateChanged(object sender, AffiliationInformationEventArgs e)
         {
             logger.LogInformation("[{EventName}] {@EventArgs}", "AffiliationStateChanged", e);
+        }
+
+        public async Task PttGroups(IEnumerable<string> groups)
+        {
+            // want to remove this, just a poc
+            await calls.PttGroupsAsync(groups);
+            
+            
+            audio.StartCapture();
         }
 
         public async Task MakeGroupCallAsync(string groupId)

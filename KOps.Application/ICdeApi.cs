@@ -12,7 +12,7 @@ namespace KOps.Application
         Task LoginAsync(string id);
 
         Task MakeGroupCallAsync(string groupId);
-
+        Task PttGroups(IEnumerable<string> groups);
         Task ReleaseFloor();
     }
 }

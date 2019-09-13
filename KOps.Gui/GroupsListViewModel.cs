@@ -4,16 +4,20 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using KOps.Application;
+using MediatR;
 
 namespace KOps.Gui
 {
     public class GroupsListViewModel : ViewModel
     {
+        private readonly IMediator mediator;
+
         public ObservableCollection<GroupViewModel> Groups { get; }
             = new ObservableCollection<GroupViewModel>();
 
-        public GroupsListViewModel()
+        public GroupsListViewModel(IMediator mediator)
         {
+            this.mediator = mediator;
         }
 
         internal void GroupUpdate(GroupUpdate groupUpdate)
@@ -24,7 +28,7 @@ namespace KOps.Gui
 
                 if (group == null)
                 {
-                    group = new GroupViewModel();
+                    group = new GroupViewModel(mediator);
                     Groups.Add(group);
                 }
 

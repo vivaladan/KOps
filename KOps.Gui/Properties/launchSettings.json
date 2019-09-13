@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "KOps.Gui": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

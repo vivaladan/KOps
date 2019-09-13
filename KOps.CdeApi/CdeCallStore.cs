@@ -27,5 +27,21 @@ namespace KOps.CdeApi
 
             return call;
         }
+
+        public CdeCall Get(string groupId)
+        {
+            foreach (var call in calls)
+            {
+                if (call.Value.IncomingCall.Info.CalledPartyId == groupId)
+                {
+                    if (call.Value.Connected)
+                    {
+                        return call.Value;
+                    }
+                }
+            }
+
+            return null;
+        }
     }
 }

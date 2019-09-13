@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Com.Apdcomms.CdeApi;
 using Com.Apdcomms.CdeApi.Audio;
@@ -16,6 +17,7 @@ namespace KOps.CdeApi
         private readonly IMediator mediator;
         private readonly AudioInput audioInput;
         private Dictionary<uint, AudioOutput> channels = new Dictionary<uint, AudioOutput>();
+        private bool recording = false;
 
         public CdeAudio(ILogger<CdeApi> logger, ICde cde, IMediator mediator)
         {
@@ -31,12 +33,20 @@ namespace KOps.CdeApi
 
         internal void StartCapture()
         {
-            audioInput.Start();
+            if (!recording)
+            {
+                audioInput.Start();
+                recording = true;
+            }
         }
 
         internal void StopCapture()
         {
-            audioInput.Stop();
+            if (recording)
+            {
+                audioInput.Stop();
+                recording = false;
+            }
         }
 
         private void AudioInput_DataAvailable(object sender, byte[] e)

@@ -10,12 +10,12 @@ using Microsoft.Extensions.Logging;
 
 namespace KOps.CdeApi
 {
-    public class CdeCalls
+    public class CdeCalls : ICdeCalls
     {
         private readonly ILogger<CdeApi> logger;
         private readonly ICde cde;
         private readonly IMediator mediator;
-        private readonly CdeCallStore calls;
+        private readonly CdeCallStore callStore;
 
         static readonly object _object = new object();
 
@@ -25,7 +25,7 @@ namespace KOps.CdeApi
             this.cde = cde;
             this.mediator = mediator;
 
-            calls = new CdeCallStore();
+            callStore = new CdeCallStore();
 
             cde.Calling.CallStatusChanged += Calling_CallStatusChanged;
             cde.Calling.IncomingCall += Calling_IncomingCall;
@@ -35,7 +35,7 @@ namespace KOps.CdeApi
         public async Task MakeGroupCallAsync(string groupId)
         {
             var result = await cde.Calling.MakeCall(new CdeGroupIdentity(groupId));
-            var events = calls.Get(result.CallID);
+            var events = callStore.Get(result.CallID);
 
             events.IncomingCall = new CdeCallEventArgs(
                 result.CallID,
@@ -46,34 +46,64 @@ namespace KOps.CdeApi
                     CdeCallType.PreArrangedGroup,
                     groupId));
 
+            events.CallInfo = new CdeCallInfoEventArgs(
+                result.CallID,
+                new CdeTalkerInfo
+                {
+                    MemberIdentity = new InternalCdeMemberIdentity { }
+                },
+                new CdeCallSupplInfo
+                {
+
+                });
+
             Publish(events);
         }
 
-        internal async Task AcquireFloor()
+        public async Task AcquireFloor()
         {
-            foreach (var call in calls.Connected)
+            foreach (var call in callStore.Connected)
             {
                 await cde.Calling.AcquireFloor(call.CallId);
             }
         }
 
-        internal async Task ReleaseFloor()
+        public async Task ReleaseFloor()
         {
-            foreach (var call in calls.Connected)
+            foreach (var call in callStore.Connected)
             {
                 await cde.Calling.ReleaseFloor(call.CallId);
             }
         }
 
+        public async Task PttGroupsAsync(IEnumerable<string> groups)
+        {
+            foreach (var groupId in groups)
+            {
+                var call = callStore.Get(groupId);
+
+                if (call == null)
+                {
+                    await MakeGroupCallAsync(groupId);
+                }
+                else
+                {
+                    await cde.Calling.AcquireFloor(call.CallId);
+                }
+            }
+        }
+
         private void Calling_IncomingCall(object sender, CdeCallEventArgs e)
         {
+            // for incoming calls, the id, channel and individual and group that called
+
             logger.LogInformation("[{EventName}] {@EventArgs}", "IncomingCall", e);
 
             // always first for incoming - never for outgoing
 
             lock (_object)
             {
-                var events = calls.Get(e.CallId);
+                var events = callStore.Get(e.CallId);
 
                 events.IncomingCall = e;
             }
@@ -81,13 +111,15 @@ namespace KOps.CdeApi
 
         private void Calling_CallStatusChanged(object sender, CdeCallStatusChangedEventArgs e)
         {
+            // the call status info
+
             logger.LogInformation("[{EventName}] {@EventArgs}", "CallStatusChanged", e);
 
             // always get this next - both incoming and outgoing
 
             lock (_object)
             {
-                var call = calls.Get(e.CallId);
+                var call = callStore.Get(e.CallId);
 
                 call.CallStatusChanged = e;
 
@@ -100,13 +132,15 @@ namespace KOps.CdeApi
 
         private void Calling_CallInfo(object sender, CdeCallInfoEventArgs e)
         {
+            // the ptt talker info
+
             logger.LogInformation("[{EventName}] {@EventArgs}", "CallInfo", e);
 
             // get this last - always for incoming but only for outgoing once someone else has taken the floor
 
             lock (_object)
             {
-                var call = calls.Get(e.CallId);
+                var call = callStore.Get(e.CallId);
 
                 call.CallInfo = e;
 
@@ -118,7 +152,7 @@ namespace KOps.CdeApi
         }
 
         private void Publish(CdeCall call)
-        {            
+        {
             var callUpdate = new CallUpdate
             {
                 CallId = call.IncomingCall.CallId,
@@ -141,7 +175,7 @@ namespace KOps.CdeApi
                 callUpdate.FloorStatus = FloorStatus.Taken;
             }
             else if (call.CallStatusChanged.FloorStatus == CdeFloorStatus.Granted)
-            {                
+            {
                 callUpdate.Talker = "You";
                 callUpdate.FloorStatus = FloorStatus.Granted;
             }

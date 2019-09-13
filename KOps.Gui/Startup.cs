@@ -37,6 +37,8 @@ namespace KOps.Gui
 
             services.AddScoped<ICdeApi, CdeApi.CdeApi>();
 
+            services.AddScoped<TalkgroupHandler>();
+
             services.AddSingleton<GroupsListViewModel>();
             services.AddSingleton<CallsListViewModel>();
             services.AddSingleton<CallControlViewModel>();

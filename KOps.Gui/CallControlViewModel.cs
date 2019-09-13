@@ -8,26 +8,27 @@ namespace KOps.Gui
 {
     public class CallControlViewModel : ViewModel
     {
-        private readonly ICdeApi cdeApi;
+        private readonly TalkgroupHandler talkgroupHandler;
 
         public ICommand Push { get; }
         public ICommand Release { get; }
 
-        public CallControlViewModel(ICdeApi cdeApi)
+        public CallControlViewModel(TalkgroupHandler talkgroupHandler)
         {
             Push = new DelegateCommand(OnPush);
             Release = new DelegateCommand(OnRelease);
-            this.cdeApi = cdeApi;
+            
+            this.talkgroupHandler = talkgroupHandler;
         }
 
         private async void OnPush(object obj)
         {
-            await cdeApi.AcquireFloor();
+            await talkgroupHandler.AcquireFloor();
         }
 
         private async void OnRelease(object obj)
         {
-            await cdeApi.ReleaseFloor();
+            await talkgroupHandler.ReleaseFloor();
         }
     }
 }

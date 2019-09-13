@@ -58,8 +58,14 @@ namespace KOps.CdeApi
                     var memberInfos = await cde.GroupManagement.GetGroupMemberInformation(groupInfo.ID, groupInfo.TotalGroupMembers);
                     group.MemberInfos = memberInfos;
 
+                    await cde.GroupManagement.EnabledSimultaneousSession(groupInfo.ID);
+
                     Publish(group);
                 }
+
+                var simultaneousSessionConfiguration = await cde.GroupManagement.GetSimultaneousSessionsConfiguration();
+                logger.LogInformation("[{EventName}] {@SimultaneousSessionConfiguration}", "SimultaneousSessionsConfiguration", simultaneousSessionConfiguration);
+
             }
         }
 

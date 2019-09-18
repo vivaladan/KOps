@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Com.Apdcomms.CdeApi;
+using Com.Apdcomms.CdeApi.Affiliations;
 using Com.Apdcomms.CdeApi.Presence;
 using Com.Apdcomms.CdeApi.Subscription;
 using KOps.Application;
@@ -58,14 +60,40 @@ namespace KOps.CdeApi
                     var memberInfos = await cde.GroupManagement.GetGroupMemberInformation(groupInfo.ID, groupInfo.TotalGroupMembers);
                     group.MemberInfos = memberInfos;
 
-                    await cde.GroupManagement.EnabledSimultaneousSession(groupInfo.ID);
 
                     Publish(group);
                 }
 
-                var simultaneousSessionConfiguration = await cde.GroupManagement.GetSimultaneousSessionsConfiguration();
-                logger.LogInformation("[{EventName}] {@SimultaneousSessionConfiguration}", "SimultaneousSessionsConfiguration", simultaneousSessionConfiguration);
+                await EnableSimultaneousSessions(groups.All());
+                await EnableAffiliationMonitoring(groups.All());
+            }
+        }
 
+        private async Task EnableAffiliationMonitoring(IEnumerable<CdeGroup> groups)
+        {
+            var groupIds = groups.Select(g => g.GroupInfo.ID.Uri).ToList();
+
+            var result = await cde.Affiliations.SetAffiliationMonitoring(groupIds);
+
+            var logLevel = result == CdeError.Success ? LogLevel.Information : LogLevel.Warning;
+            logger.Log(logLevel, "[{EventName}] {@result}", "SetAffiliationMonitoring", result);
+
+            cde.Affiliations.AffiliationStateChanged += Affiliations_AffiliationStateChanged;
+        }
+
+        private void Affiliations_AffiliationStateChanged(object sender, AffiliationInformationEventArgs e)
+        {
+            logger.LogInformation("[{EventName}] {@AffiliationInformation}", "AffiliationStateChanged", e.AffiliationInformation);
+        }
+
+        private async Task EnableSimultaneousSessions(IEnumerable<CdeGroup> groups)
+        {
+            var simultaneousSessionConfiguration = await cde.GroupManagement.GetSimultaneousSessionsConfiguration();
+            logger.LogInformation("[{EventName}] {@SimultaneousSessionConfiguration}", "SimultaneousSessionsConfiguration", simultaneousSessionConfiguration);
+
+            foreach (var group in groups)
+            {
+                await cde.GroupManagement.EnabledSimultaneousSession(group.GroupInfo.ID);
             }
         }
 

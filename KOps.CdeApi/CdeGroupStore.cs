@@ -23,5 +23,10 @@ namespace KOps.CdeApi
 
             return group;
         }
+
+        public IEnumerable<CdeGroup> All()
+        {
+            return groups.Values;
+        }
     }
 }
